@@ -26,5 +26,5 @@ func NewAtLevel(tag string, levelStr string) (logging.Logger, error) {
 
 	logger.SetLevel(logLevel)
 
-	return NewLogrusWrapper(logger.WithField("command", tag)), nil
+	return NewWrapper(logger.WithField("command", tag)), nil
 }

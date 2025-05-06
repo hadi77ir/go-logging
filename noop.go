@@ -1,6 +1,9 @@
 package logging
 
-import "os"
+import (
+	"fmt"
+	"os"
+)
 
 type NoOpLogger int
 
@@ -8,6 +11,9 @@ func (n NoOpLogger) Log(level Level, args ...interface{}) {
 	// no-op
 	if level == FatalLevel {
 		os.Exit(1)
+	}
+	if level == PanicLevel {
+		panic(fmt.Sprint(args...))
 	}
 }
 
