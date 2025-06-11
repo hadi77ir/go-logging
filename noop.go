@@ -25,4 +25,8 @@ func (n NoOpLogger) WithFields(fields Fields) Logger {
 	return n
 }
 
+func (n NoOpLogger) WithAdditionalFields(fields Fields) Logger {
+	return n
+}
+
 var _ Logger = NoOpLogger(0)

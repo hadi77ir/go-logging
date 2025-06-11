@@ -1,5 +1,10 @@
 package logging
 
+import (
+	"fmt"
+	"strings"
+)
+
 type Fields map[string]interface{}
 type Level uint32
 
@@ -24,8 +29,32 @@ const (
 	TraceLevel
 )
 
+// ParseLevel takes a string level and returns the Logrus log level constant. Borrowed from logrus.
+func ParseLevel(lvl string) (Level, error) {
+	switch strings.ToLower(lvl) {
+	case "panic":
+		return PanicLevel, nil
+	case "fatal":
+		return FatalLevel, nil
+	case "error":
+		return ErrorLevel, nil
+	case "warn", "warning":
+		return WarnLevel, nil
+	case "info":
+		return InfoLevel, nil
+	case "debug":
+		return DebugLevel, nil
+	case "trace":
+		return TraceLevel, nil
+	}
+
+	var l Level
+	return l, fmt.Errorf("not a valid logrus Level: %q", lvl)
+}
+
 type Logger interface {
 	Log(level Level, args ...interface{})
 	WithFields(fields Fields) Logger
+	WithAdditionalFields(fields Fields) Logger
 	Logger() Logger
 }

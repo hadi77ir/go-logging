@@ -9,11 +9,11 @@ import (
 // New creates a new logger instance.
 // it should be used by main() function and also each command's Run() function
 // to initialize the logging functionality.
-func New(tag string) (logging.Logger, error) {
-	return NewAtLevel(tag, os.Getenv("LOG_LEVEL"))
+func New() (logging.Logger, error) {
+	return NewAtLevel(os.Getenv("LOG_LEVEL"))
 }
 
-func NewAtLevel(tag string, levelStr string) (logging.Logger, error) {
+func NewAtLevel(levelStr string) (logging.Logger, error) {
 	logger := logrus.New()
 	logLevel := logrus.InfoLevel
 	if levelStr != "" {
@@ -26,5 +26,5 @@ func NewAtLevel(tag string, levelStr string) (logging.Logger, error) {
 
 	logger.SetLevel(logLevel)
 
-	return NewWrapper(logger.WithField("command", tag)), nil
+	return NewWrapper(logger), nil
 }

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/hadi77ir/go-logging"
 	"github.com/sirupsen/logrus"
+	"maps"
 	"os"
 )
 
@@ -16,6 +17,7 @@ type LogrusInterface interface {
 
 type Wrapper struct {
 	logger LogrusInterface
+	fields logging.Fields
 }
 
 func (c *Wrapper) Logger() logging.Logger {
@@ -26,7 +28,11 @@ func (c *Wrapper) Logger() logging.Logger {
 }
 
 func NewWrapper(logger LogrusInterface) logging.Logger {
-	return &Wrapper{logger: logger}
+	return newWrapperWithFields(logger, logging.Fields{})
+}
+
+func newWrapperWithFields(logger LogrusInterface, fields logging.Fields) logging.Logger {
+	return &Wrapper{logger: logger, fields: fields}
 }
 
 func (c *Wrapper) Log(level logging.Level, args ...interface{}) {
@@ -41,6 +47,12 @@ func (c *Wrapper) Log(level logging.Level, args ...interface{}) {
 		panic(fmt.Sprint(args...))
 	}
 }
+
 func (c *Wrapper) WithFields(fields logging.Fields) logging.Logger {
-	return NewWrapper(c.logger.WithFields(logrus.Fields(fields)))
+	return newWrapperWithFields(c.logger.WithFields(logrus.Fields(fields)), fields)
+}
+func (c *Wrapper) WithAdditionalFields(fields logging.Fields) logging.Logger {
+	merged := maps.Clone(fields)
+	maps.Copy(merged, c.fields)
+	return newWrapperWithFields(c.logger.WithFields(logrus.Fields(merged)), merged)
 }
