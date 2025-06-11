@@ -52,7 +52,8 @@ func (c *Wrapper) WithFields(fields logging.Fields) logging.Logger {
 	return newWrapperWithFields(c.logger.WithFields(logrus.Fields(fields)), fields)
 }
 func (c *Wrapper) WithAdditionalFields(fields logging.Fields) logging.Logger {
-	merged := maps.Clone(fields)
+	// no need to clone, as fields map shouldn't be modified by caller.
+	merged := fields
 	maps.Copy(merged, c.fields)
 	return newWrapperWithFields(c.logger.WithFields(logrus.Fields(merged)), merged)
 }
