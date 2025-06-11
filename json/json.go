@@ -82,7 +82,11 @@ func (l *Logger) WithFields(fields logging.Fields) logging.Logger {
 
 func (l *Logger) WithAdditionalFields(fields logging.Fields) logging.Logger {
 	merged := fields
-	maps.Copy(merged, l.fields)
+	for k, v := range l.fields {
+		if _, ok := merged[k]; !ok {
+			merged[k] = v
+		}
+	}
 	return l.WithFields(merged)
 }
 

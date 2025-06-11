@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/hadi77ir/go-logging"
 	"github.com/sirupsen/logrus"
-	"maps"
 	"os"
 )
 
@@ -54,6 +53,10 @@ func (c *Wrapper) WithFields(fields logging.Fields) logging.Logger {
 func (c *Wrapper) WithAdditionalFields(fields logging.Fields) logging.Logger {
 	// no need to clone, as fields map shouldn't be modified by caller.
 	merged := fields
-	maps.Copy(merged, c.fields)
+	for k, v := range c.fields {
+		if _, ok := merged[k]; !ok {
+			merged[k] = v
+		}
+	}
 	return newWrapperWithFields(c.logger.WithFields(logrus.Fields(merged)), merged)
 }
