@@ -9,7 +9,7 @@ func (l *LimitedLogger) Log(level Level, args ...interface{}) {
 	if level < l.level {
 		return
 	}
-	l.logger.Log(l.level, args...)
+	l.logger.Log(level, args...)
 }
 
 func (l *LimitedLogger) WithFields(fields Fields) Logger {
