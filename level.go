@@ -6,7 +6,7 @@ type LimitedLogger struct {
 }
 
 func (l *LimitedLogger) Log(level Level, args ...interface{}) {
-	if level < l.level {
+	if level > l.level {
 		return
 	}
 	l.logger.Log(level, args...)
