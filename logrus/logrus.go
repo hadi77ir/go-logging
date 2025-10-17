@@ -2,9 +2,10 @@ package logrus
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/hadi77ir/go-logging"
 	"github.com/sirupsen/logrus"
-	"os"
 )
 
 var _ logging.Logger = &Wrapper{}
@@ -36,7 +37,7 @@ func newWrapperWithFields(logger LogrusInterface, fields logging.Fields) logging
 
 func (c *Wrapper) Log(level logging.Level, args ...interface{}) {
 	if c.logger != nil {
-		c.logger.Log(logrus.Level(level), args)
+		c.logger.Log(logrus.Level(level), args...)
 	}
 	// failsafe
 	if level == logging.FatalLevel {
